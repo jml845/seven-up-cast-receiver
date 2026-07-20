@@ -4,6 +4,14 @@
   const context=cast.framework.CastReceiverContext.getInstance();
   const idle=document.querySelector('#idle'),board=document.querySelector('#scoreboard');
   const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  let wakeLock=null;
+  async function keepScreenAwake(){
+    if(!navigator.wakeLock||wakeLock||document.visibilityState==='hidden')return;
+    try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null})}catch{}
+  }
+  keepScreenAwake();
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')keepScreenAwake()});
+  setInterval(keepScreenAwake,60000);
   function render(data){
     if(!data?.players?.length)return;idle.classList.add('hidden');board.classList.remove('hidden');
     const players=[...data.players].sort((a,b)=>b.score-a.score),cols=players.length>8?2:1,rows=Math.ceil(players.length/cols),high=Math.max(...players.map(p=>p.score));
