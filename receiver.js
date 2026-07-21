@@ -1,5 +1,5 @@
 (function(){
-  const winnerStyles=document.createElement('link');winnerStyles.rel='stylesheet';winnerStyles.href='winner.css';document.head.appendChild(winnerStyles);
+  const winnerStyles=document.createElement('link');winnerStyles.rel='stylesheet';winnerStyles.href='winner.css?v=13';document.head.appendChild(winnerStyles);
   const NAMESPACE='urn:x-cast:com.sevenup.scoreboard';
   const context=cast.framework.CastReceiverContext.getInstance();
   const idle=document.querySelector('#idle'),board=document.querySelector('#scoreboard');
@@ -18,7 +18,7 @@
     if(data.status==='winner'){
       const winner=players.find(p=>p.id===data.winnerId)||players[0];
       board.className='scoreboard winner-screen';
-      board.innerHTML=`<div class="winner-burst">✦</div><div class="winner-trophy">🏆</div><span class="winner-kicker">GAME WINNER</span><h1>${esc(winner.name)} wins!</h1><p>${Number(winner.score)||0} points · ${Number(data.completedRounds)||0} rounds</p><div class="final-board">${players.map((p,i)=>`<article class="final-row ${p.id===winner.id?'champion':''}"><em>${i+1}</em><strong>${esc(p.name)}</strong><b>${Number(p.score)||0}</b></article>`).join('')}</div>`;
+      board.innerHTML=`<div class="winner-cards" aria-hidden="true">${[1,2,3,4,5,6,7].map((n,i)=>`<i style="--i:${i}">${n}</i>`).join('')}</div><div class="winner-crown">👑</div><span class="winner-kicker">GAME WINNER</span><h1>${esc(winner.name)} wins!</h1><p>${Number(winner.score)||0} points · ${Number(data.completedRounds)||0} rounds</p><div class="final-board">${players.map((p,i)=>`<article class="final-row ${p.id===winner.id?'champion':''}"><em>${i+1}</em><strong>${esc(p.name)}</strong><b>${Number(p.score)||0}</b></article>`).join('')}</div>`;
       return;
     }
     board.className='scoreboard';
